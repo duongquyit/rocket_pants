@@ -23,6 +23,10 @@ module RocketPants
       RocketPants.pass_through_errors    = rp_config.pass_through_errors unless rp_config.pass_through_errors.nil?
       # Set the rocket pants cache if present.
       RocketPants.cache = rp_config.cache if rp_config.cache
+
+      ActiveSupport.on_load :i18n do
+        I18n.load_path.concat(Dir["#{File.expand_path('../locale', __FILE__)}/*.{rb,yml}"])
+      end
     end
 
     initializer "rocket_pants.url_helpers" do |app|
