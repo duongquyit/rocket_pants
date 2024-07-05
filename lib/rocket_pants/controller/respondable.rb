@@ -112,6 +112,18 @@ module RocketPants
       ActiveSupport::JSON.encode object
     end
 
+    # Method replace for Rack::Utils.bytesize
+    if ''.respond_to?(:bytesize)
+      def bytesize(string)
+        string.bytesize
+      end
+    else
+      def bytesize(string)
+        string.size
+      end
+    end
+    module_function :bytesize
+
     # Given a json object or encoded json, will encode it
     # and set it to be the output of the given page.
     def render_json(json, options = {})
@@ -125,7 +137,7 @@ module RocketPants
       self.status        ||= :ok
       self.content_type  ||= Mime::JSON
       self.response_body   = json
-      headers['Content-Length'] = Rack::Utils.bytesize(json).to_s
+      headers['Content-Length'] = bytesize(json).to_s
     end
 
     # Renders a raw object, without any wrapping etc.
